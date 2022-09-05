@@ -27,12 +27,16 @@ use czechpmdevs\imageonmap\image\BlankImage;
 use czechpmdevs\imageonmap\item\FilledMap;
 use czechpmdevs\imageonmap\utils\PermissionDeniedException;
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIdentifier;
 use pocketmine\item\ItemIds;
 use pocketmine\network\mcpe\protocol\MapInfoRequestPacket;
 use pocketmine\plugin\PluginBase;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\Server;
 use function array_key_exists;
 use function mkdir;
 
@@ -40,6 +44,10 @@ class ImageOnMap extends PluginBase implements Listener {
 	use DataProviderTrait;
 
 	private static ImageOnMap $instance;
+
+    private array $mapSendQueue;
+
+    private array $joinedPlayers;
 
 	protected function onLoad(): void {
 		self::$instance = $this;
@@ -58,6 +66,8 @@ class ImageOnMap extends PluginBase implements Listener {
 		}
 
 		$this->getServer()->getCommandMap()->register("imageonmap", new ImageCommand());
+        $this->mapSendQueue = [];
+        $this->joinedPlayers = [];
 
 		ItemFactory::getInstance()->register(new FilledMap(new ItemIdentifier(ItemIds::FILLED_MAP, 0)));
 	}
@@ -72,6 +82,7 @@ class ImageOnMap extends PluginBase implements Listener {
 
 	public function onDataPacketReceive(DataPacketReceiveEvent $event): void {
 		$packet = $event->getPacket();
+
 		if(!$packet instanceof MapInfoRequestPacket) {
 			return;
 		}
@@ -82,8 +93,35 @@ class ImageOnMap extends PluginBase implements Listener {
 			return;
 		}
 
-		$event->getOrigin()->sendDataPacket($this->getCachedMap($packet->mapId)->getPacket($packet->mapId));
+        $event->getOrigin()->sendDataPacket($this->getCachedMap($packet->mapId)->getPacket($packet->mapId));
+
+        // まだJoinしてない
+        if (!isset($this->joinedPlayers[strtolower($event->getOrigin()->getPlayer()->getName())])) {
+            if (!isset($this->mapSendQueue[strtolower($event->getOrigin()->getPlayer()->getName())])) {
+                $this->mapSendQueue[strtolower($event->getOrigin()->getPlayer()->getName())] = [];
+            }
+
+            $this->mapSendQueue[strtolower($event->getOrigin()->getPlayer()->getName())][] = $this->getCachedMap($packet->mapId)->getPacket($packet->mapId);
+        }
 	}
+
+    public function onPlayerJoin(PlayerJoinEvent $event): void
+    {
+        $this->joinedPlayers[strtolower($event->getPlayer()->getName())] = strtolower($event->getPlayer()->getName());
+
+        if (isset($this->mapSendQueue[strtolower($event->getPlayer()->getName())])) {
+            foreach ($this->mapSendQueue[strtolower($event->getPlayer()->getName())] as $pk) {
+                $event->getPlayer()->getNetworkSession()->sendDataPacket($pk);
+            }
+
+            unset($this->mapSendQueue[strtolower($event->getPlayer()->getName())]);
+        }
+    }
+
+    public function onPlayerQuit(PlayerQuitEvent $event): void
+    {
+        unset($this->joinedPlayers[strtolower($event->getPlayer()->getName())]);
+    }
 
 	/**
 	 * @internal
