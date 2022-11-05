@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace czechpmdevs\imageonmap;
 
-use czechpmdevs\imageonmap\item\FilledMap;
+use czechpmdevs\imageonmap\item\SignboardMap;
 use czechpmdevs\imageonmap\utils\PermissionDeniedException;
 use pocketmine\block\Block;
 use pocketmine\block\ItemFrame;
@@ -181,7 +181,7 @@ class ImagePlaceSession implements Listener {
 					for($x = 0; $x <= $width; ++$x) {
 						for($y = 0; $y <= $height; ++$y) {
 							$blocks[] = $getItemFrame($minX, $minY + $y, $minZ + $x)
-								->setFramedItem(FilledMap::get()->setMapId($this->plugin->getImageFromFile($this->imageFile, $width + 1, $height + 1, $x, $height - $y)))
+								->setFramedItem(SignboardMap::get()->setMapId($this->plugin->getImageFromFile($this->imageFile, $width + 1, $height + 1, $x, $height - $y)))
 								->setHasMap(true);
 						}
 					}
@@ -189,7 +189,7 @@ class ImagePlaceSession implements Listener {
 					for($x = 0; $x <= $width; ++$x) {
 						for($y = 0; $y <= $height; ++$y) {
 							$blocks[] = $getItemFrame($minX, $minY + $y, $maxZ - $x)
-								->setFramedItem(FilledMap::get()->setMapId($this->plugin->getImageFromFile($this->imageFile, $width + 1, $height + 1, $x, $height - $y)))
+								->setFramedItem(SignboardMap::get()->setMapId($this->plugin->getImageFromFile($this->imageFile, $width + 1, $height + 1, $x, $height - $y)))
 								->setHasMap(true);
 						}
 					}
@@ -200,7 +200,7 @@ class ImagePlaceSession implements Listener {
 					for($x = 0; $x <= $width; ++$x) {
 						for($y = 0; $y <= $height; ++$y) {
 							$blocks[] = $getItemFrame($minX + $x, $minY + $y, $minZ)
-								->setFramedItem(FilledMap::get()->setMapId($this->plugin->getImageFromFile($this->imageFile, $width + 1, $height + 1, $x, $height - $y)))
+								->setFramedItem(SignboardMap::get()->setMapId($this->plugin->getImageFromFile($this->imageFile, $width + 1, $height + 1, $x, $height - $y)))
 								->setHasMap(true);
 						}
 					}
@@ -208,7 +208,7 @@ class ImagePlaceSession implements Listener {
 					for($x = 0; $x <= $width; ++$x) {
 						for($y = 0; $y <= $height; ++$y) {
 							$blocks[] = $getItemFrame($maxX - $x, $minY + $y, $minZ)
-								->setFramedItem(FilledMap::get()->setMapId($this->plugin->getImageFromFile($this->imageFile, $width + 1, $height + 1, $x, $height - $y)))
+								->setFramedItem(SignboardMap::get()->setMapId($this->plugin->getImageFromFile($this->imageFile, $width + 1, $height + 1, $x, $height - $y)))
 								->setHasMap(true);
 						}
 					}

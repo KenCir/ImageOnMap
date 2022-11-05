@@ -28,7 +28,7 @@ use pocketmine\item\ItemIds;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\utils\AssumptionFailedError;
 
-class FilledMap extends Item {
+class SignboardMap extends Item {
 
 	private int $uuid;
 
@@ -47,9 +47,9 @@ class FilledMap extends Item {
 		$this->uuid = $tag->getLong("map_uuid");
 	}
 
-	public static function get(): FilledMap {
-		$item = ItemFactory::getInstance()->get(ItemIds::FILLED_MAP);
-		if(!$item instanceof FilledMap) {
+	public static function get(): SignboardMap {
+		$item = ItemFactory::getInstance()->get(ItemIds::FILLED_MAP, 1);
+		if(!$item instanceof SignboardMap) {
 			throw new AssumptionFailedError("Item is not registered properly");
 		}
 

@@ -24,7 +24,7 @@ namespace czechpmdevs\imageonmap\command;
 
 use czechpmdevs\imageonmap\ImageOnMap;
 use czechpmdevs\imageonmap\ImagePlaceSession;
-use czechpmdevs\imageonmap\item\FilledMap;
+use czechpmdevs\imageonmap\item\SignboardMap;
 use czechpmdevs\imageonmap\utils\ImageLoader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -130,7 +130,7 @@ class ImageCommand extends Command implements PluginOwned {
 					$sender->sendMessage("§6Using default values to obtain the image.");
 				}
 
-				$sender->getInventory()->addItem(FilledMap::get()->setMapId(ImageOnMap::getInstance()->getImageFromFile($file, $xChunkCount, $yChunkCount, $xOffset, $yOffset)));
+				$sender->getInventory()->addItem(SignboardMap::get()->setMapId(ImageOnMap::getInstance()->getImageFromFile($file, $xChunkCount, $yChunkCount, $xOffset, $yOffset)));
 				$sender->sendMessage("§aMap successfully created from the image.");
 				break;
 			case "place":

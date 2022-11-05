@@ -24,7 +24,7 @@ namespace czechpmdevs\imageonmap;
 
 use czechpmdevs\imageonmap\command\ImageCommand;
 use czechpmdevs\imageonmap\image\BlankImage;
-use czechpmdevs\imageonmap\item\FilledMap;
+use czechpmdevs\imageonmap\item\SignboardMap;
 use czechpmdevs\imageonmap\utils\PermissionDeniedException;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
@@ -69,7 +69,7 @@ class ImageOnMap extends PluginBase implements Listener {
         $this->mapSendQueue = [];
         $this->joinedPlayers = [];
 
-		ItemFactory::getInstance()->register(new FilledMap(new ItemIdentifier(ItemIds::FILLED_MAP, 0)));
+		ItemFactory::getInstance()->register(new SignboardMap(new ItemIdentifier(ItemIds::FILLED_MAP, 1)));
 	}
 
 	protected function onDisable(): void {

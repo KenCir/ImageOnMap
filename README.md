@@ -66,7 +66,7 @@ $id = $api->getImageFromFile(
 - Obtaining Map item, assigning id & giving it to player
 
 ```php
-/** @var \czechpmdevs\imageonmap\item\FilledMap $map */
+/** @var \czechpmdevs\imageonmap\item\SignboardMap $map */
 $map = (FilledMap::get())->setMapId($id);
 /** @var \pocketmine\player\Player $player */
 $player->getInventory()->addItem($map);
